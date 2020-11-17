@@ -1,7 +1,9 @@
 package wordfilter
 
 import (
+	"encoding/json"
 	_ "github.com/go-sql-driver/mysql"
+	"io/ioutil"
 	"log"
 	"time"
 )
@@ -9,9 +11,9 @@ import (
 var serviceAC *Ac
 
 type SensitiveWords struct {
-	Id   int64
-	Word string
-	Rank uint8
+	Id   int64  `json:"id"`
+	Word string `json:"word"`
+	Rank uint8  `json:"rank"`
 }
 
 func getAc() *Ac {
@@ -24,7 +26,7 @@ func setAc(ac *Ac) {
 
 func LoadWords() {
 	log.Println("start load ")
-	ac, err := loadWordDb()
+	ac, err := loadWords()
 	if err != nil {
 		log.Fatal("load err:", err)
 	}
@@ -32,9 +34,20 @@ func LoadWords() {
 	log.Println("start load end  ")
 }
 
-func loadWordDb() (*Ac, error) {
+func loadWords() (*Ac, error) {
+	return loadWordFile()
+}
+
+func loadWordFile() (*Ac, error) {
 	var wordList []*SensitiveWords
-	NewConfig().MysqlConn.Find(&wordList)
+	f, err := ioutil.ReadFile("../bad_words.json")
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(f, &wordList)
+	if err != nil {
+		return nil, err
+	}
 	ac := NewAc()
 	c := 0
 	t1 := time.Now()
