@@ -103,11 +103,11 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 			if p.IsWord {
 				//# 若状态为词的结尾，则把词放进结果集
 				//#判断当前这些位置是否为单词的边界
-				if startWordIndex > 0 && isWordCell(content[startWordIndex-1]) && isWordCell(content[startWordIndex]) {
+				if startWordIndex > 0 && common.IsWordCell(content[startWordIndex-1]) && common.IsWordCell(content[startWordIndex]) {
 					//#当前字符和前面的字符都是字母,那么它是连续单词
 					continue
 				}
-				if currentPosition < contentLen-1 && isWordCell(content[currentPosition+1]) && isWordCell(content[currentPosition]) {
+				if currentPosition < contentLen-1 && common.IsWordCell(content[currentPosition+1]) && common.IsWordCell(content[currentPosition]) {
 					//#print '后面不是单词边界'
 					continue
 				}
@@ -146,19 +146,4 @@ func (ac *Ac) Replace(content string, rank uint8) *common.FindResponse {
 	res.Status = 0
 	res.NewContent = string(contentBuff)
 	return res
-}
-
-var wordCells = make(map[rune]bool)
-
-func isWordCell(s rune) bool {
-	_, ok := wordCells[s]
-	return ok
-}
-
-func init() {
-	//#预先生成好组成单词的字符
-	for _, c := range "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" {
-		wordCells[c] = true
-	}
-
 }
