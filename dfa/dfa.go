@@ -11,11 +11,6 @@ type (
 		rank     uint8
 		end      bool
 	}
-
-	scope struct {
-		start int
-		stop  int
-	}
 )
 
 func NewTire() *trieNode {
