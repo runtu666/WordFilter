@@ -64,6 +64,9 @@ func (n *trieNode) Search(contentStr string) []*common.SearchItem {
 			continue
 		}
 		if child.end {
+			if size < start-1 && common.IsWordCell(char) && common.IsWordCell(chars[start+1]) {
+				continue
+			}
 			result = append(result, &common.SearchItem{
 				StartP: start,
 				EndP:   start,
@@ -77,6 +80,12 @@ func (n *trieNode) Search(contentStr string) []*common.SearchItem {
 			}
 			child = child.children[chars[end]]
 			if child.end {
+				if size < end-1 && common.IsWordCell(char) && common.IsWordCell(chars[end+1]) {
+					continue
+				}
+				if start > 0 && common.IsWordCell(char) && common.IsWordCell(chars[start-1]) {
+					continue
+				}
 				result = append(result, &common.SearchItem{
 					StartP: start,
 					EndP:   end,
@@ -88,4 +97,23 @@ func (n *trieNode) Search(contentStr string) []*common.SearchItem {
 	}
 
 	return result
+}
+
+func (n *trieNode) Replace(content string, rank uint8) *common.FindResponse {
+	var res = new(common.FindResponse)
+	res.BadWords = make(map[uint8][]*common.SearchItem)
+	result := n.Search(content)
+	contentBuff := []rune(content)
+	for _, item := range result {
+		if item.Rank > rank && rank != 0 {
+			continue
+		}
+		for i := item.StartP; i <= item.EndP; i++ {
+			contentBuff[i] = '*'
+		}
+		res.BadWords[item.Rank] = append(res.BadWords[item.Rank], item)
+	}
+	res.Status = 0
+	res.NewContent = string(contentBuff)
+	return res
 }
