@@ -1,28 +1,26 @@
 package ac
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
 	"go-wordfilter/common"
-	"io/ioutil"
 	"log"
 	"testing"
 )
 
 func TestAC(t *testing.T) {
 	ac := NewAc()
-	ac.LoadWords(GetWords())
+	ac.LoadWords(common.GetWords())
 	result := ac.Search("hello av hava 毛泽东 sm 气枪 测试, 支付宝 ")
 	log.Println("len:", len(result))
 	for _, item := range result {
-		fmt.Println(item)
+		fmt.Printf("%+v \n", item)
 	}
 }
 
 func TestAc_Replace(t *testing.T) {
 	ac := NewAc()
-	ac.LoadWords(GetWords())
+	ac.LoadWords(common.GetWords())
 	result := ac.Replace("hello av hava 毛泽东 sm 气枪 测试, 支付宝 ", 0)
 	fmt.Printf("%+v\n", result.NewContent)
 }
@@ -68,23 +66,10 @@ func TestRun(t *testing.T) {
 
 func TestReload(t *testing.T) {
 	ac := NewAc()
-	ac.LoadWords(GetWords())
+	ac.LoadWords(common.GetWords())
 	result := ac.Search("hello av hava 毛泽东 sm 气枪 测试, 支付宝 ")
 	log.Println("len:", len(result))
 	for _, item := range result {
 		fmt.Println(item)
 	}
-}
-
-func GetWords() []*common.SensitiveWords {
-	var wordList []*common.SensitiveWords
-	f, err := ioutil.ReadFile("../bad_words.json")
-	if err != nil {
-		panic(err)
-	}
-	err = json.Unmarshal(f, &wordList)
-	if err != nil {
-		panic(err)
-	}
-	return wordList
 }
