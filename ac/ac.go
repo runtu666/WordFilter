@@ -1,7 +1,9 @@
-package wordfilter
+package ac
 
 import (
+	"log"
 	"strings"
+	"time"
 )
 
 type (
@@ -26,6 +28,10 @@ type (
 	Ac struct {
 		Root *AcNode `json:"root"`
 	}
+	SensitiveWords struct {
+		Word string `json:"word"`
+		Rank uint8  `json:"rank"`
+	}
 )
 
 func NewAc() *Ac {
@@ -37,6 +43,16 @@ func newAcNode() *AcNode {
 	return &AcNode{
 		Next: make(map[rune]*AcNode),
 	}
+}
+
+func (ac *Ac) LoadWords(words []*SensitiveWords) {
+	t1 := time.Now()
+	for _, row := range words {
+		ac.AddWord(row.Word, row.Rank)
+	}
+	t2 := time.Now()
+	log.Println("load Words:", len(words), "sec:", t2.Sub(t1).Seconds())
+	ac.Make()
 }
 
 func (ac *Ac) AddWord(word string, rank uint8) {

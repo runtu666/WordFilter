@@ -1,15 +1,17 @@
-package wordfilter
+package ac
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
+	"io/ioutil"
 	"log"
 	"testing"
 )
 
 func TestAC(t *testing.T) {
-	LoadWords()
-	ac := getAc()
+	ac := NewAc()
+	ac.LoadWords(GetWords())
 	result := ac.Search("hello av hava 毛泽东 sm 气枪 测试, 支付宝 ")
 	log.Println("len:", len(result))
 	for _, item := range result {
@@ -18,8 +20,8 @@ func TestAC(t *testing.T) {
 }
 
 func TestAc_Replace(t *testing.T) {
-	LoadWords()
-	ac := getAc()
+	ac := NewAc()
+	ac.LoadWords(GetWords())
 	result := ac.Replace("hello av hava 毛泽东 sm 气枪 测试, 支付宝 ", 0)
 	fmt.Printf("%+v\n", result.NewContent)
 }
@@ -64,13 +66,24 @@ func TestRun(t *testing.T) {
 }
 
 func TestReload(t *testing.T) {
-	ac, err := loadWords()
-	if err != nil {
-		log.Fatal(err)
-	}
+	ac := NewAc()
+	ac.LoadWords(GetWords())
 	result := ac.Search("hello av hava 毛泽东 sm 气枪 测试, 支付宝 ")
 	log.Println("len:", len(result))
 	for _, item := range result {
 		fmt.Println(item)
 	}
+}
+
+func GetWords() []*SensitiveWords {
+	var wordList []*SensitiveWords
+	f, err := ioutil.ReadFile("../bad_words.json")
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(f, &wordList)
+	if err != nil {
+		panic(err)
+	}
+	return wordList
 }
