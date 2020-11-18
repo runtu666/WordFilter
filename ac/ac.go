@@ -9,10 +9,10 @@ import (
 
 type (
 	AcNode struct {
-		Next   map[rune]*AcNode `json:"next"`
-		Fail   *AcNode          `json:"fail"`
-		IsWord bool             `json:"isWord"`
-		Rank   uint8            `json:"Rank"`
+		Next map[rune]*AcNode `json:"next"`
+		Fail *AcNode          `json:"fail"`
+		End  bool             `json:"isWord"`
+		Rank uint8            `json:"Rank"`
 	}
 	Ac struct {
 		Root *AcNode `json:"root"`
@@ -49,7 +49,7 @@ func (ac *Ac) AddWord(word string, rank uint8) {
 		}
 		tmp = tmp.Next[c]
 	}
-	tmp.IsWord = true
+	tmp.End = true
 	tmp.Rank = rank
 }
 
@@ -100,7 +100,7 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 			}
 			//# 转移状态机的状态
 			p = p.Next[word]
-			if p.IsWord {
+			if p.End {
 				//# 若状态为词的结尾，则把词放进结果集
 				//#判断当前这些位置是否为单词的边界
 				if startWordIndex > 0 && common.IsWordCell(content[startWordIndex-1]) && common.IsWordCell(content[startWordIndex]) {
