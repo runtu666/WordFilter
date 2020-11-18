@@ -58,41 +58,33 @@ func (n *trieNode) Search(contentStr string) []*common.SearchItem {
 	result := make([]*common.SearchItem, 0)
 	chars := []rune(strings.ToLower(contentStr))
 	size := len(chars)
-	start := -1
-	for i := 0; i < size; i++ {
-		child, ok := n.children[chars[i]]
+	for start, char := range chars {
+		child, ok := n.children[char]
 		if !ok {
 			continue
-		}
-
-		if start < 0 {
-			start = i
 		}
 		if child.end {
 			result = append(result, &common.SearchItem{
 				StartP: start,
-				EndP:   i + 1,
-				Words:  string(chars[start : i+1]),
+				EndP:   start,
+				Word:   string(chars[start : start+1]),
 				Rank:   child.rank,
 			})
-
 		}
-		for j := i + 1; j < size; j++ {
-			grandchild, ok := child.children[chars[j]]
-			if !ok {
+		for end := start + 1; end < size; end++ {
+			if _, ok := child.children[chars[end]]; !ok {
 				break
 			}
-			child = grandchild
+			child = child.children[chars[end]]
 			if child.end {
 				result = append(result, &common.SearchItem{
 					StartP: start,
-					EndP:   j + 1,
-					Words:  string(chars[start : j+1]),
+					EndP:   end,
+					Word:   string(chars[start : end+1]),
 					Rank:   child.rank,
 				})
 			}
 		}
-		start = -1
 	}
 
 	return result

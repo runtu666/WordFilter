@@ -10,7 +10,7 @@ type (
 	SearchItem struct {
 		StartP int    `json:"start_p"`
 		EndP   int    `json:"end_p"`
-		Words  string `json:"words"`
+		Word   string `json:"word"`
 		Rank   uint8  `json:"rank"`
 	}
 	SensitiveWords struct {

@@ -36,7 +36,7 @@ func (ac *Ac) LoadWords(words []*common.SensitiveWords) {
 		ac.AddWord(row.Word, row.Rank)
 	}
 	t2 := time.Now()
-	log.Println("load Words:", len(words), "sec:", t2.Sub(t1).Seconds())
+	log.Println("load Word:", len(words), "sec:", t2.Sub(t1).Seconds())
 	ac.Make()
 }
 
@@ -114,7 +114,7 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 				result = append(result, &common.SearchItem{
 					StartP: startWordIndex,
 					EndP:   currentPosition,
-					Words:  string([]rune(rawContent)[startWordIndex : currentPosition+1]),
+					Word:   string([]rune(rawContent)[startWordIndex : currentPosition+1]),
 					Rank:   p.Rank,
 				})
 			}
