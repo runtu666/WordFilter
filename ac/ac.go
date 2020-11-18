@@ -1,36 +1,21 @@
 package ac
 
 import (
+	"go-wordfilter/common"
 	"log"
 	"strings"
 	"time"
 )
 
 type (
-	SearchItem struct {
-		StartP int    `json:"start_p"`
-		EndP   int    `json:"end_p"`
-		Words  string `json:"words"`
-		Rank   uint8  `json:"rank"`
-	}
 	AcNode struct {
 		Next   map[rune]*AcNode `json:"next"`
 		Fail   *AcNode          `json:"fail"`
 		IsWord bool             `json:"isWord"`
 		Rank   uint8            `json:"Rank"`
 	}
-	FindResponse struct {
-		Status     uint8                   `json:"status"`
-		NewContent string                  `json:"new_content"`
-		ErrMsg     string                  `json:"err_msg"`
-		BadWords   map[uint8][]*SearchItem `json:"bad_words"`
-	}
 	Ac struct {
 		Root *AcNode `json:"root"`
-	}
-	SensitiveWords struct {
-		Word string `json:"word"`
-		Rank uint8  `json:"rank"`
 	}
 )
 
@@ -45,7 +30,7 @@ func newAcNode() *AcNode {
 	}
 }
 
-func (ac *Ac) LoadWords(words []*SensitiveWords) {
+func (ac *Ac) LoadWords(words []*common.SensitiveWords) {
 	t1 := time.Now()
 	for _, row := range words {
 		ac.AddWord(row.Word, row.Rank)
@@ -95,11 +80,11 @@ func (ac *Ac) Make() {
 	}
 }
 
-func (ac *Ac) Search(contentStr string) []*SearchItem {
+func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 	rawContent := contentStr
 	content := []rune(strings.ToLower(contentStr))
 	p := ac.Root
-	result := make([]*SearchItem, 0)
+	result := make([]*common.SearchItem, 0)
 	startWordIndex := 0
 	contentLen := len(content)
 	for currentPosition, word := range content {
@@ -126,7 +111,7 @@ func (ac *Ac) Search(contentStr string) []*SearchItem {
 					//#print '后面不是单词边界'
 					continue
 				}
-				result = append(result, &SearchItem{
+				result = append(result, &common.SearchItem{
 					StartP: startWordIndex,
 					EndP:   currentPosition,
 					Words:  string([]rune(rawContent)[startWordIndex : currentPosition+1]),
@@ -140,9 +125,9 @@ func (ac *Ac) Search(contentStr string) []*SearchItem {
 
 }
 
-func (ac *Ac) Replace(content string, rank uint8) *FindResponse {
-	var res = new(FindResponse)
-	res.BadWords = make(map[uint8][]*SearchItem)
+func (ac *Ac) Replace(content string, rank uint8) *common.FindResponse {
+	var res = new(common.FindResponse)
+	res.BadWords = make(map[uint8][]*common.SearchItem)
 	if ac == nil {
 		res.ErrMsg = "ac is nil"
 		return res

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
+	"go-wordfilter/common"
 	"io/ioutil"
 	"log"
 	"testing"
@@ -75,8 +76,8 @@ func TestReload(t *testing.T) {
 	}
 }
 
-func GetWords() []*SensitiveWords {
-	var wordList []*SensitiveWords
+func GetWords() []*common.SensitiveWords {
+	var wordList []*common.SensitiveWords
 	f, err := ioutil.ReadFile("../bad_words.json")
 	if err != nil {
 		panic(err)
