@@ -4,23 +4,29 @@ import (
 	"strings"
 )
 
-type SearchItem struct {
-	StartP int    `json:"start_p"`
-	EndP   int    `json:"end_p"`
-	Words  string `json:"words"`
-	Rank   uint8  `json:"rank"`
-}
-
-type AcNode struct {
-	Next   map[rune]*AcNode `json:"next"`
-	Fail   *AcNode          `json:"fail"`
-	IsWord bool             `json:"isWord"`
-	Rank   uint8            `json:"Rank"`
-}
-
-type Ac struct {
-	Root *AcNode `json:"root"`
-}
+type (
+	SearchItem struct {
+		StartP int    `json:"start_p"`
+		EndP   int    `json:"end_p"`
+		Words  string `json:"words"`
+		Rank   uint8  `json:"rank"`
+	}
+	AcNode struct {
+		Next   map[rune]*AcNode `json:"next"`
+		Fail   *AcNode          `json:"fail"`
+		IsWord bool             `json:"isWord"`
+		Rank   uint8            `json:"Rank"`
+	}
+	FindResponse struct {
+		Status     uint8                   `json:"status"`
+		NewContent string                  `json:"new_content"`
+		ErrMsg     string                  `json:"err_msg"`
+		BadWords   map[uint8][]*SearchItem `json:"bad_words"`
+	}
+	Ac struct {
+		Root *AcNode `json:"root"`
+	}
+)
 
 func NewAc() *Ac {
 	return &Ac{
@@ -116,6 +122,29 @@ func (ac *Ac) Search(contentStr string) []*SearchItem {
 	}
 	return result
 
+}
+
+func (ac *Ac) Replace(content string, rank uint8) *FindResponse {
+	var res = new(FindResponse)
+	res.BadWords = make(map[uint8][]*SearchItem)
+	if ac == nil {
+		res.ErrMsg = "ac is nil"
+		return res
+	}
+	result := ac.Search(content)
+	contentBuff := []rune(content)
+	for _, item := range result {
+		if item.Rank > rank && rank != 0 {
+			continue
+		}
+		for i := item.StartP; i <= item.EndP; i++ {
+			contentBuff[i] = '*'
+		}
+		res.BadWords[item.Rank] = append(res.BadWords[item.Rank], item)
+	}
+	res.Status = 0
+	res.NewContent = string(contentBuff)
+	return res
 }
 
 var wordCells = make(map[rune]bool)
