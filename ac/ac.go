@@ -37,8 +37,7 @@ func (ac *Ac) LoadWords(words []*common.SensitiveWords) {
 	for _, row := range words {
 		ac.AddWord(row.Word, row.Rank)
 	}
-	t2 := time.Now()
-	log.Println("load Word:", len(words), "sec:", t2.Sub(t1).Seconds())
+	log.Println("load Word:", len(words), "sec:", time.Now().Sub(t1).Seconds())
 	ac.Make()
 }
 

@@ -2,7 +2,9 @@ package dfa
 
 import (
 	"go-wordfilter/common"
+	"log"
 	"strings"
+	"time"
 )
 
 type (
@@ -29,9 +31,11 @@ func NewDfaNode() *DfaNode {
 }
 
 func (n *Dfa) LoadWords(words []*common.SensitiveWords) {
+	t1 := time.Now()
 	for _, word := range words {
 		n.add(word.Word, word.Rank)
 	}
+	log.Println("load Word:", len(words), "sec:", time.Now().Sub(t1).Seconds())
 }
 
 func (n *Dfa) add(word string, rank uint8) {
