@@ -8,7 +8,7 @@ import (
 )
 
 func TestDfa(t *testing.T) {
-	dfa := NewTire()
+	dfa := NewDfa()
 	dfa.LoadWords(common.GetWords())
 	result := dfa.Search("hello av java 毛泽东 sm 气枪 测试, 支付宝 ")
 	log.Println("len:", len(result))
@@ -18,14 +18,14 @@ func TestDfa(t *testing.T) {
 }
 
 func TestDfaReplace(t *testing.T) {
-	dfa := NewTire()
+	dfa := NewDfa()
 	dfa.LoadWords(common.GetWords())
 	result := dfa.Replace("hello av java 毛泽东 sm 气枪 测试, 支付宝 ", 0)
 	fmt.Println(result)
 }
 
 func TestB(t *testing.T) {
-	ac := NewTire()
+	ac := NewDfa()
 	ac.LoadWords([]*common.SensitiveWords{
 		&common.SensitiveWords{
 			Word: "一二三四",

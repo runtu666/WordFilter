@@ -9,7 +9,7 @@ import (
 
 type (
 	AcNode struct {
-		Next map[rune]*AcNode `json:"next"`
+		Children map[rune]*AcNode `json:"next"`
 		//Prev *AcNode          `json:"prev"`
 		Position int     `json:"position"`
 		Fail     *AcNode `json:"fail"`
@@ -28,7 +28,7 @@ func NewAc() *Ac {
 }
 func newAcNode() *AcNode {
 	return &AcNode{
-		Next: make(map[rune]*AcNode),
+		Children: make(map[rune]*AcNode),
 	}
 }
 
@@ -44,16 +44,16 @@ func (ac *Ac) LoadWords(words []*common.SensitiveWords) {
 
 func (ac *Ac) AddWord(word string, rank uint8) {
 	chars := []rune(strings.ToLower(word))
-	tmp := ac.Root
+	nd := ac.Root
 	for i, c := range chars {
-		if _, ok := tmp.Next[c]; !ok {
-			tmp.Next[c] = newAcNode()
+		if _, ok := nd.Children[c]; !ok {
+			nd.Children[c] = newAcNode()
 		}
-		tmp.Next[c].Position = i
-		tmp = tmp.Next[c]
+		nd.Children[c].Position = i
+		nd = nd.Children[c]
 	}
-	tmp.End = true
-	tmp.Rank = rank
+	nd.End = true
+	nd.Rank = rank
 }
 
 func (ac *Ac) Make() {
@@ -62,14 +62,14 @@ func (ac *Ac) Make() {
 	for len(queue) > 0 {
 		parent := queue[0]
 		queue = queue[1:]
-		for k, child := range parent.Next {
+		for k, child := range parent.Children {
 			if parent == ac.Root {
 				child.Fail = ac.Root
 			} else {
 				FailNode := parent.Fail
 				for FailNode != nil {
-					if _, ok := FailNode.Next[k]; ok {
-						child.Fail = FailNode.Next[k]
+					if _, ok := FailNode.Children[k]; ok {
+						child.Fail = FailNode.Children[k]
 						break
 					}
 					FailNode = FailNode.Fail
@@ -93,15 +93,15 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 		// 检索状态机，直到匹配
 		for {
 			//直到找到失败节点，或者找到根节点
-			_, ok := p.Next[word]
+			_, ok := p.Children[word]
 			if ok || p == ac.Root {
 				break
 			}
 			p = p.Fail
 		}
-		if _, ok := p.Next[word]; ok {
+		if _, ok := p.Children[word]; ok {
 			//# 转移状态机的状态
-			p = p.Next[word]
+			p = p.Children[word]
 			if p.End {
 				//if startWordIndex > 0 && common.IsWordCell(content[startWordIndex-1]) && common.IsWordCell(content[startWordIndex]) {
 				//	//#当前字符和前面的字符都是字母,那么它是连续单词
