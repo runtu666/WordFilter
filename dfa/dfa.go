@@ -59,9 +59,9 @@ func (n *trieNode) Search(contentStr string) []*common.SearchItem {
 			continue
 		}
 		if child.end {
-			if size < start-1 && common.IsWordCell(char) && common.IsWordCell(chars[start+1]) {
-				continue
-			}
+			//if size < start-1 && common.IsWordCell(char) && common.IsWordCell(chars[start+1]) {
+			//	continue
+			//}
 			result = append(result, &common.SearchItem{
 				StartP: start,
 				EndP:   start,
@@ -75,12 +75,12 @@ func (n *trieNode) Search(contentStr string) []*common.SearchItem {
 			}
 			child = child.children[chars[end]]
 			if child.end {
-				if size < end-1 && common.IsWordCell(char) && common.IsWordCell(chars[end+1]) {
-					continue
-				}
-				if start > 0 && common.IsWordCell(char) && common.IsWordCell(chars[start-1]) {
-					continue
-				}
+				//if size < end-1 && common.IsWordCell(char) && common.IsWordCell(chars[end+1]) {
+				//	continue
+				//}
+				//if start > 0 && common.IsWordCell(char) && common.IsWordCell(chars[start-1]) {
+				//	continue
+				//}
 				result = append(result, &common.SearchItem{
 					StartP: start,
 					EndP:   end,
