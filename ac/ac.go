@@ -90,12 +90,8 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 	//contentLen := len(content)
 	for currentPosition, word := range content {
 		// 检索状态机，直到匹配
-		for {
+		for p.Children[word] == nil && p != ac.Root {
 			//直到找到失败节点，或者找到根节点
-			_, ok := p.Children[word]
-			if ok || p == ac.Root {
-				break
-			}
 			p = p.Fail
 		}
 		if _, ok := p.Children[word]; ok {
