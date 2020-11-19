@@ -14,7 +14,7 @@ type (
 		Position int     `json:"position"`
 		Fail     *AcNode `json:"fail"`
 		End      bool    `json:"isWord"`
-		Rank     uint8   `json:"Rank"`
+		Rank     int     `json:"Rank"`
 	}
 	Ac struct {
 		Root *AcNode `json:"root"`
@@ -41,7 +41,7 @@ func (ac *Ac) LoadWords(words []*common.SensitiveWords) {
 	ac.Make()
 }
 
-func (ac *Ac) AddWord(word string, rank uint8) {
+func (ac *Ac) AddWord(word string, rank int) {
 	chars := []rune(strings.ToLower(word))
 	nd := ac.Root
 	for i, c := range chars {
@@ -125,9 +125,9 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 
 }
 
-func (ac *Ac) Replace(content string, rank uint8) *common.FindResponse {
+func (ac *Ac) Replace(content string, rank int) *common.FindResponse {
 	var res = new(common.FindResponse)
-	res.BadWords = make(map[uint8][]*common.SearchItem)
+	res.BadWords = make(map[int][]*common.SearchItem)
 	if ac == nil {
 		res.ErrMsg = "ac is nil"
 		return res

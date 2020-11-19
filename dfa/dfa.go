@@ -10,7 +10,7 @@ import (
 type (
 	DfaNode struct {
 		Children map[rune]*DfaNode
-		Rank     uint8
+		Rank     int
 		End      bool
 	}
 	Dfa struct {
@@ -38,7 +38,7 @@ func (n *Dfa) LoadWords(words []*common.SensitiveWords) {
 	log.Println("load Word:", len(words), "sec:", time.Now().Sub(t1).Seconds())
 }
 
-func (n *Dfa) add(word string, rank uint8) {
+func (n *Dfa) add(word string, rank int) {
 	chars := []rune(strings.ToLower(word))
 	if len(chars) == 0 {
 		return
@@ -100,9 +100,9 @@ func (n *Dfa) Search(contentStr string) []*common.SearchItem {
 	return result
 }
 
-func (n *Dfa) Replace(content string, rank uint8) *common.FindResponse {
+func (n *Dfa) Replace(content string, rank int) *common.FindResponse {
 	var res = new(common.FindResponse)
-	res.BadWords = make(map[uint8][]*common.SearchItem)
+	res.BadWords = make(map[int][]*common.SearchItem)
 	result := n.Search(content)
 	contentBuff := []rune(content)
 	for _, item := range result {
