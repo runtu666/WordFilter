@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"go-wordfilter/ac"
 	"go-wordfilter/common"
 	"go-wordfilter/dfa"
@@ -18,7 +17,7 @@ func TestAC(t *testing.T) {
 	ac.LoadWords(common.GetWords())
 	result := ac.Search(Text2)
 	for _, item := range result {
-		fmt.Printf("%+v \n", item)
+		t.Logf("%+v \n", item)
 	}
 }
 
@@ -27,7 +26,7 @@ func TestDfa(t *testing.T) {
 	dfa.LoadWords(common.GetWords())
 	result := dfa.Search(Text2)
 	for _, item := range result {
-		fmt.Printf("%+v \n", item)
+		t.Logf("%+v \n", item)
 	}
 }
 
@@ -35,14 +34,14 @@ func TestAc_Replace(t *testing.T) {
 	ac := ac.NewAc()
 	ac.LoadWords(common.GetWords())
 	result := ac.Replace(Text1, 0)
-	fmt.Printf("%+v\n", result.NewContent)
+	t.Logf("%+v\n", result.NewContent)
 }
 
 func TestDfaReplace(t *testing.T) {
 	dfa := dfa.NewDfa()
 	dfa.LoadWords(common.GetWords())
 	result := dfa.Replace(Text1, 0)
-	fmt.Println(result)
+	t.Log(result)
 }
 
 func TestAcB(t *testing.T) {
@@ -67,7 +66,7 @@ func TestAcB(t *testing.T) {
 	})
 	result := ac.Search("一二三四五六七")
 	for _, item := range result {
-		fmt.Printf("%+v \n", item)
+		t.Logf("%+v \n", item)
 	}
 }
 
@@ -93,6 +92,14 @@ func TestDfaB(t *testing.T) {
 	})
 	result := dfa.Search("一二三四五六七")
 	for _, item := range result {
-		fmt.Printf("%+v \n", item)
+		t.Logf("%+v \n", item)
 	}
+}
+
+func TestRune(t *testing.T) {
+	var str = "毛泽东"
+	t.Log(len(str))
+	t.Log([]rune(str))
+	t.Log([]byte(str))
+	t.Log(str[1:4])
 }
