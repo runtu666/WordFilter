@@ -2,12 +2,12 @@ package common
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 )
 
 func GetWords() []*SensitiveWords {
 	var wordList []*SensitiveWords
-	f, err := ioutil.ReadFile("../bad_words.json")
+	f, err := os.ReadFile("../bad_words.json")
 	if err != nil {
 		panic(err)
 	}

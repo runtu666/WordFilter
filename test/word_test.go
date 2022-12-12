@@ -1,11 +1,20 @@
 package test
 
 import (
+	"testing"
+
 	"go-wordfilter/ac"
 	"go-wordfilter/common"
 	"go-wordfilter/dfa"
-	"testing"
 )
+
+var a = ac.NewAc()
+var d = dfa.NewDfa()
+
+func init() {
+	a.LoadWords(common.GetWords())
+	d.LoadWords(common.GetWords())
+}
 
 const (
 	Text1 = "hello av java 毛泽东 sm 气枪 测试, 支付宝"
@@ -47,20 +56,20 @@ func TestDfaReplace(t *testing.T) {
 func TestAcB(t *testing.T) {
 	ac := ac.NewAc()
 	ac.LoadWords([]*common.SensitiveWords{
-		&common.SensitiveWords{
-			Word: "三四",
-			Rank: 1,
-		},
-		&common.SensitiveWords{
+		{
 			Word: "一二三四",
 			Rank: 1,
 		},
-		&common.SensitiveWords{
+		{
 			Word: "一二三",
 			Rank: 1,
 		},
-		&common.SensitiveWords{
+		{
 			Word: "四五六七",
+			Rank: 1,
+		},
+		{
+			Word: "三四",
 			Rank: 1,
 		},
 	})
@@ -73,19 +82,19 @@ func TestAcB(t *testing.T) {
 func TestDfaB(t *testing.T) {
 	dfa := dfa.NewDfa()
 	dfa.LoadWords([]*common.SensitiveWords{
-		&common.SensitiveWords{
+		{
 			Word: "一二三四",
 			Rank: 1,
 		},
-		&common.SensitiveWords{
+		{
 			Word: "一二三",
 			Rank: 1,
 		},
-		&common.SensitiveWords{
+		{
 			Word: "四五六七",
 			Rank: 1,
 		},
-		&common.SensitiveWords{
+		{
 			Word: "三四",
 			Rank: 1,
 		},

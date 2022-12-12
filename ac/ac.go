@@ -91,7 +91,7 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 	content := []rune(strings.ToLower(contentStr))
 	p := ac.Root
 	result := make([]*common.SearchItem, 0)
-	//contentLen := len(content)
+	contentLen := len(content)
 	for currentPosition, word := range content {
 		// 检索状态机，直到匹配
 		for p.Children[word] == nil && p != ac.Root {
@@ -103,15 +103,14 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 			p = p.Children[word]
 			if p.End {
 				startWordIndex := currentPosition - p.Position
-
 				//#当前字符和前面的字符都是字母,那么它是连续单词
 				if startWordIndex > 0 && common.IsWordCell(content[startWordIndex-1]) && common.IsWordCell(content[startWordIndex]) {
 					continue
 				}
-				//if currentPosition < contentLen-1 && common.IsWordCell(content[currentPosition+1]) && common.IsWordCell(content[currentPosition]) {
-				//	//#print '后面不是单词边界'
-				//	continue
-				//}
+				if currentPosition < contentLen-1 && common.IsWordCell(content[currentPosition+1]) && common.IsWordCell(content[currentPosition]) {
+					//#print '后面不是单词边界'
+					continue
+				}
 				result = append(result, &common.SearchItem{
 					StartP: startWordIndex,
 					EndP:   currentPosition,

@@ -1,19 +1,8 @@
 package test
 
 import (
-	"go-wordfilter/ac"
-	"go-wordfilter/common"
-	"go-wordfilter/dfa"
 	"testing"
 )
-
-var a = ac.NewAc()
-var d = dfa.NewDfa()
-
-func init() {
-	a.LoadWords(common.GetWords())
-	d.LoadWords(common.GetWords())
-}
 
 func BenchmarkAC(b *testing.B) {
 	b.ReportAllocs()
