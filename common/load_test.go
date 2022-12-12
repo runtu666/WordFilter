@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -36,5 +35,5 @@ func TestLoad(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	ioutil.WriteFile("../bad_words.json", marshal, 0644)
+	os.WriteFile("../bad_words.json", marshal, 0644)
 }

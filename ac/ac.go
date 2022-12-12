@@ -1,10 +1,11 @@
 package ac
 
 import (
-	"go-wordfilter/common"
 	"log"
 	"strings"
 	"time"
+
+	"go-wordfilter/common"
 )
 
 type (
@@ -44,6 +45,9 @@ func (ac *Ac) LoadWords(words []*common.SensitiveWords) {
 func (ac *Ac) AddWord(word string, rank int) {
 	chars := []rune(strings.ToLower(word))
 	nd := ac.Root
+	if len(chars) == 0 {
+		return
+	}
 	for i, c := range chars {
 		if _, ok := nd.Children[c]; !ok {
 			nd.Children[c] = newAcNode()
@@ -98,15 +102,16 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 			//# 转移状态机的状态
 			p = p.Children[word]
 			if p.End {
-				//if startWordIndex > 0 && common.IsWordCell(content[startWordIndex-1]) && common.IsWordCell(content[startWordIndex]) {
-				//	//#当前字符和前面的字符都是字母,那么它是连续单词
-				//	continue
-				//}
+				startWordIndex := currentPosition - p.Position
+
+				//#当前字符和前面的字符都是字母,那么它是连续单词
+				if startWordIndex > 0 && common.IsWordCell(content[startWordIndex-1]) && common.IsWordCell(content[startWordIndex]) {
+					continue
+				}
 				//if currentPosition < contentLen-1 && common.IsWordCell(content[currentPosition+1]) && common.IsWordCell(content[currentPosition]) {
 				//	//#print '后面不是单词边界'
 				//	continue
 				//}
-				startWordIndex := currentPosition - p.Position
 				result = append(result, &common.SearchItem{
 					StartP: startWordIndex,
 					EndP:   currentPosition,
@@ -124,10 +129,6 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 func (ac *Ac) Replace(content string, rank int) *common.FindResponse {
 	var res = new(common.FindResponse)
 	res.BadWords = make(map[int][]*common.SearchItem)
-	if ac == nil {
-		res.ErrMsg = "ac is nil"
-		return res
-	}
 	result := ac.Search(content)
 	contentBuff := []rune(content)
 	for _, item := range result {

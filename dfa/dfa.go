@@ -1,10 +1,11 @@
 package dfa
 
 import (
-	"go-wordfilter/common"
 	"log"
 	"strings"
 	"time"
+
+	"go-wordfilter/common"
 )
 
 type (
@@ -81,7 +82,7 @@ func (n *Dfa) Search(contentStr string) []*common.SearchItem {
 			}
 			child = child.Children[chars[end]]
 			if child.End {
-				//if size < End-1 && common.IsWordCell(char) && common.IsWordCell(chars[End+1]) {
+				//if size < end-1 && common.IsWordCell(char) && common.IsWordCell(chars[end+1]) {
 				//	continue
 				//}
 				//if start > 0 && common.IsWordCell(char) && common.IsWordCell(chars[start-1]) {
