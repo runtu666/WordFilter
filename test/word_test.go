@@ -33,7 +33,7 @@ func TestAC(t *testing.T) {
 func TestDfa(t *testing.T) {
 	dfa := dfa.NewDfa()
 	dfa.LoadWords(common.GetWords())
-	result := dfa.Search(Text2)
+	result := dfa.Search(Text1)
 	for _, item := range result {
 		t.Logf("%+v \n", item)
 	}

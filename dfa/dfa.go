@@ -61,33 +61,19 @@ func (n *Dfa) Search(contentStr string) []*common.SearchItem {
 	size := len(chars)
 	currentNode := n.Root
 	for start, char := range chars {
-		child, ok := currentNode.Children[char]
-		if !ok {
-			continue
-		}
-		if child.End {
-			//if size < start-1 && common.IsWordCell(char) && common.IsWordCell(chars[start+1]) {
-			//	continue
-			//}
-			result = append(result, &common.SearchItem{
-				StartP: start,
-				EndP:   start,
-				Word:   string(chars[start : start+1]),
-				Rank:   child.Rank,
-			})
-		}
-		for end := start + 1; end < size; end++ {
+		child := currentNode
+		for end := start; end < size; end++ {
 			if _, ok := child.Children[chars[end]]; !ok {
 				break
 			}
 			child = child.Children[chars[end]]
 			if child.End {
-				//if size < end-1 && common.IsWordCell(char) && common.IsWordCell(chars[end+1]) {
-				//	continue
-				//}
-				//if start > 0 && common.IsWordCell(char) && common.IsWordCell(chars[start-1]) {
-				//	continue
-				//}
+				if size < end-1 && common.IsWordCell(char) && common.IsWordCell(chars[end+1]) {
+					continue
+				}
+				if start > 0 && common.IsWordCell(char) && common.IsWordCell(chars[start-1]) {
+					continue
+				}
 				result = append(result, &common.SearchItem{
 					StartP: start,
 					EndP:   end,
