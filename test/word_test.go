@@ -22,34 +22,26 @@ const (
 )
 
 func TestAC(t *testing.T) {
-	ac := ac.NewAc()
-	ac.LoadWords(common.GetWords())
-	result := ac.Search(Text2)
+	result := a.Search(Text2)
 	for _, item := range result {
 		t.Logf("%+v \n", item)
 	}
 }
 
 func TestDfa(t *testing.T) {
-	dfa := dfa.NewDfa()
-	dfa.LoadWords(common.GetWords())
-	result := dfa.Search(Text1)
+	result := d.Search(Text2)
 	for _, item := range result {
 		t.Logf("%+v \n", item)
 	}
 }
 
 func TestAc_Replace(t *testing.T) {
-	ac := ac.NewAc()
-	ac.LoadWords(common.GetWords())
-	result := ac.Replace(Text1, 0)
+	result := a.Replace(Text1, 0)
 	t.Logf("%+v\n", result.NewContent)
 }
 
 func TestDfaReplace(t *testing.T) {
-	dfa := dfa.NewDfa()
-	dfa.LoadWords(common.GetWords())
-	result := dfa.Replace(Text1, 0)
+	result := d.Replace(Text1, 0)
 	t.Log(result)
 }
 
