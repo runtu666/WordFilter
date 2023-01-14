@@ -94,7 +94,7 @@ func (ac *Ac) Search(contentStr string) []*common.SearchItem {
 	contentLen := len(content)
 	for currentPosition, word := range content {
 		// 检索状态机，直到匹配
-		for p.Children[word] == nil && p != ac.Root {
+		if p.Children[word] == nil && p != ac.Root {
 			//直到找到失败节点，或者找到根节点
 			p = p.Fail
 		}
