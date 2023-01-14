@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"testing"
 
 	"go-wordfilter/ac"
@@ -22,78 +23,32 @@ const (
 )
 
 func TestAC(t *testing.T) {
-	result := a.Search(Text2)
+	result := a.Search(Text1)
 	for _, item := range result {
 		t.Logf("%+v \n", item)
 	}
 }
 
 func TestDfa(t *testing.T) {
-	result := d.Search(Text2)
+	result := d.Search(Text1)
 	for _, item := range result {
 		t.Logf("%+v \n", item)
 	}
 }
 
 func TestAc_Replace(t *testing.T) {
-	result := a.Replace(Text1, 0)
+	result := a.Replace(Text2, 0)
 	t.Logf("%+v\n", result.NewContent)
 }
 
 func TestDfaReplace(t *testing.T) {
-	result := d.Replace(Text1, 0)
+	result := d.Replace(Text2, 0)
 	t.Log(result)
 }
 
-func TestAcB(t *testing.T) {
-	ac := ac.NewAc()
-	ac.LoadWords([]*common.SensitiveWords{
-		{
-			Word: "一二三四",
-			Rank: 1,
-		},
-		{
-			Word: "一二三",
-			Rank: 1,
-		},
-		{
-			Word: "四五六七",
-			Rank: 1,
-		},
-		{
-			Word: "三四",
-			Rank: 1,
-		},
-	})
-	result := ac.Search("一二三四五六七")
-	for _, item := range result {
-		t.Logf("%+v \n", item)
-	}
-}
-
-func TestDfaB(t *testing.T) {
-	dfa := dfa.NewDfa()
-	dfa.LoadWords([]*common.SensitiveWords{
-		{
-			Word: "一二三四",
-			Rank: 1,
-		},
-		{
-			Word: "一二三",
-			Rank: 1,
-		},
-		{
-			Word: "四五六七",
-			Rank: 1,
-		},
-		{
-			Word: "三四",
-			Rank: 1,
-		},
-	})
-	result := dfa.Search("一二三四五六七")
-	for _, item := range result {
-		t.Logf("%+v \n", item)
+func TestRange(t *testing.T) {
+	for i := 0; i < 17084; i++ {
+		fmt.Print(1)
 	}
 }
 
